@@ -5,9 +5,7 @@ import json
 from urllib.error import URLError, HTTPError
 
 def get_package_info(package_name, repo_url, version):
-    """
-    Получает информацию о пакете из npm репозитория
-    """
+    
     try:
         if repo_url.endswith('/'):
             repo_url = repo_url[:-1]
@@ -116,4 +114,5 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         print(f"Ошибка: {e}", file=sys.stderr)
+
         sys.exit(1)
