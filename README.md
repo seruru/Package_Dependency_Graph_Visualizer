@@ -41,3 +41,33 @@ python stage2.py --package <name> --repo <url> --test-mode false --version <vers
 ```bash
 python stage2.py --package react --repo https://registry.npmjs.org --test-mode false --version 18.2.0
 ```
+
+## Этап 3: Построение графа зависимостей
+### Цель
+Построить граф зависимостей с учетом транзитивности и выполнить основные операции над ним.
+
+### Выполненные задачи
+- Реализован алгоритм BFS для обхода зависимостей
+- Добавлен учет максимальной глубины анализа
+- Реализовано обнаружение и обработка циклических зависимостей
+- Добавлен режим тестирования с файлами
+- Реализована визуализация в виде ASCII-дерева
+- Добавлена топологическая сортировка зависимостей
+
+### Использование
+```bash
+cd stage3
+# Тестовый режим
+python stage3.py --package A --repo test_simple.txt --test-mode true --ascii-tree true --max-depth 3
+
+# Реальный режим  
+python stage3.py --package react --repo https://registry.npmjs.org --test-mode false --version 18.2.0 --ascii-tree true --max-depth 2
+```
+
+### Тестовые файлы
+
+- test_simple.txt - простой граф зависимостей
+
+- test_cycle.txt - граф с циклическими зависимостями
+
+- test_complex.txt - сложный граф зависимостей
