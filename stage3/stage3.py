@@ -10,7 +10,7 @@ class DependencyGraph:
         self.graph = {}
         self.visited = set()
         self.cycle_detected = False
-        self.cycle_edges = set()  # Для хранения циклических ребер
+        self.cycle_edges = set() 
         
     def fetch_package_data(self, package_name):
         try:
@@ -133,36 +133,30 @@ class DependencyGraph:
             children = self.graph.get(node, [])
             for i, child in enumerate(reversed(children)):
                 is_last_child = (i == 0)
-                # Проверяем, является ли ребро циклическим
                 if (node, child) in self.cycle_edges:
                     stack.append((child, new_prefix, is_last_child, new_visited))
                 else:
                     stack.append((child, new_prefix, is_last_child, new_visited))
     
     def get_dependency_order(self):
-        # Для графов с циклами топологическая сортировка невозможна
         if self.cycle_detected:
             print("Cannot determine installation order due to cyclic dependencies")
             return []
         
-        # Стандартная топологическая сортировка для ациклических графов
         in_degree = {}
         for node in self.visited:  # Только для посещенных узлов
             in_degree[node] = 0
             
-        # Вычисляем входящие степени только для посещенных узлов
         for node in self.visited:
             for neighbor in self.graph.get(node, []):
                 if neighbor in self.visited:
                     in_degree[neighbor] += 1
         
-        # Находим узлы с нулевой входящей степенью
         queue = deque()
         for node in self.visited:
             if in_degree[node] == 0:
                 queue.append(node)
-                
-        # Выполняем топологическую сортировку
+
         result = []
         while queue:
             node = queue.popleft()
@@ -173,8 +167,7 @@ class DependencyGraph:
                     in_degree[neighbor] -= 1
                     if in_degree[neighbor] == 0:
                         queue.append(neighbor)
-        
-        # Проверяем, все ли узлы вошли в результат
+
         if len(result) != len(self.visited):
             print("Warning: Some dependencies could not be ordered (possible cycles)")
             
@@ -231,7 +224,6 @@ def main():
                 for i, package in enumerate(order, 1):
                     print(f"  {i}. {package}")
             
-            # Выводим полный граф для отладки
             print("\nComplete dependency graph structure:")
             for package in sorted(graph.visited):  # Только достижимые узлы
                 deps = graph.graph.get(package, [])
